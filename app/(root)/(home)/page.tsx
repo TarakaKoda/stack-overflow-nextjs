@@ -1,3 +1,4 @@
+import QuestionCard from "@/components/cards/QuestionCard";
 import HomeFilters from "@/components/home/HomeFilters";
 import Filter from "@/components/shared/Filter";
 import NoResult from "@/components/shared/NoResult";
@@ -8,30 +9,30 @@ import Link from "next/link";
 
 const questions = [
   {
-    _id: 1,
+    _id: "1",
     title: "Cascading delete in SQLAlchemy?",
     tags: [
-      { _id: 1, name: "python " },
-      { _id: 2, name: "sql " },
+      { _id: "1", name: "python" },
+      { _id: "2", name: "sql" },
     ],
-    author: "John Doe",
+    author: { _id: "1", name: "John Doe", picture: "" },
     upvotes: 12,
-    views: 2,
-    answers: 5,
-    createdAt: "2021-09-01T12:00:00.000z",
+    views: 2000,
+    answers: [],
+    createdAt: new Date("2024-02-14T12:00:00.000Z"),
   },
   {
-    _id: 2,
-    title: "How to center a dev?",
+    _id: "2",
+    title: "How to center a div?",
     tags: [
-      { _id: 3, name: "css" },
-      { _id: 4, name: "html" },
+      { _id: "3", name: "css" },
+      { _id: "4", name: "html" },
     ],
-    author: "John Doe",
+    author: { _id: "1", name: "John Doe", picture: "" },
     upvotes: 1,
     views: 3,
-    answers: 1,
-    createdAt: "2021-09-01T12:00:00.000z",
+    answers: [],
+    createdAt: new Date("2024-02-04T12:00:00.000Z"),
   },
 ];
 
@@ -63,7 +64,19 @@ export default function Home() {
       <HomeFilters />
       <div className="mt-10 flex w-full flex-col gap-6 ">
         {questions.length > 0 ? (
-          questions.map((question) => "QuestionCard")
+          questions.map((question) => (
+            <QuestionCard
+              key={question._id}
+              tags={question.tags}
+              title={question.title}
+              author={question.author}
+              upvotes={question.upvotes}
+              answers={question.answers}
+              views={question.views}
+              _id={question._id}
+              createdAt={question.createdAt}
+            />
+          ))
         ) : (
           <NoResult
             title="No Questions Found"
