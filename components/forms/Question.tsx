@@ -23,10 +23,18 @@ import { QuestionSchema } from "@/lib/validations";
 import { Badge } from "../ui/badge";
 import Image from "next/image";
 import { createQuestion } from "@/lib/actions/question.action";
+import { useRouter, usePathname } from "next/navigation";
+import dynamic from "next/dynamic";
 
 const type: any = "create";
 
-const Question = () => {
+interface Props {
+  mongoUserId: string;
+}
+
+const Question = ({ mongoUserId }: Props) => {
+  const router = useRouter();
+  const pathname = usePathname();
   const editorRef = useRef(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   // 1. Define your form.
@@ -43,10 +51,19 @@ const Question = () => {
   async function onSubmit(values: z.infer<typeof QuestionSchema>) {
     setIsSubmitting(true);
     try {
-      await createQuestion({});
-      //! make a async call to your API -> create question
-      //? contain all form data
+      //Todo: make a async call to your API -> create question
+      await createQuestion({
+        title: values.title,
+        tags: values.tags,
+        content: values.explanation,
+        author: JSON.parse(mongoUserId),
+        path: pathname,
+      });
+
+      //Todo: contain all form data
+
       //* navigate to home page
+      router.push("/");
     } catch (error) {
     } finally {
       setIsSubmitting(false);
@@ -188,7 +205,7 @@ const Question = () => {
                       {field.value.map((tag: any) => (
                         <Badge
                           key={tag}
-                          className="subtle-medium background-light800_dark300 text-light400_dark500 flex items-center justify-center gap-2 rounded-md border-none px-4 py-2 capitalize"
+                          className="subtle-medium background-light800_dark300 text-light400_light500 flex items-center justify-center gap-2 rounded-md border-none px-4 py-2 capitalize"
                           onClick={() => handleTagRemove(tag, field)}
                         >
                           {tag}
