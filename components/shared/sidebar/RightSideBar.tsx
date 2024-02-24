@@ -4,42 +4,42 @@ import Image from "next/image";
 import RenderTag from "../RenderTag";
 const topQuestions = [
   {
-    _id: 1,
+    _id: "1",
     title:
       "Best practices for data fetching in a Next.js application with Server-Side Rendering (SSR)?",
   },
-  { _id: 2, title: "Async/Await Function Not Handling Errors Properly" },
-  { _id: 3, title: "Next JS router" },
+  { _id: "2", title: "Async/Await Function Not Handling Errors Properly" },
+  { _id: "3", title: "Next JS router" },
   {
-    _id: 4,
+    _id: "4",
     title: "How can I get (query string) parameters from the URL in Next.js?",
   },
-  { _id: 5, title: "How do I install bing, Bing Chilling Edition?!" },
+  { _id: "5", title: "How do I install bing, Bing Chilling Edition?!" },
 ];
 
 const popularTags = [
   {
-    _id: 1,
+    _id: "1",
     title: "JavaScript",
     totalQuestions: 5,
   },
   {
-    _id: 2,
+    _id: "2",
     title: "React",
     totalQuestions: 7,
   },
   {
-    _id: 3,
+    _id: "3",
     title: "Nextjs",
     totalQuestions: 6,
   },
   {
-    _id: 4,
+    _id: "4",
     title: "Vue",
     totalQuestions: 2,
   },
   {
-    _id: 5,
+    _id: "5",
     title: "Redux",
     totalQuestions: 10,
   },
