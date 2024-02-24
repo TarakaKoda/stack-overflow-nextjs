@@ -98,7 +98,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json(
       { message: "OK", user: mongoUser },
-      { status: 201 },
+      { status: 200 },
     );
   }
   if (eventType === "user.deleted") {
