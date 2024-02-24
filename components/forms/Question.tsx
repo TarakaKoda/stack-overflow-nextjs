@@ -1,7 +1,7 @@
 "use client";
 
-import React, { KeyboardEvent, useRef, useState } from "react";
 import { Editor } from "@tinymce/tinymce-react";
+import { KeyboardEvent, useRef, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -19,12 +19,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-import { QuestionSchema } from "@/lib/validations";
-import { Badge } from "../ui/badge";
-import Image from "next/image";
 import { createQuestion } from "@/lib/actions/question.action";
-import { useRouter, usePathname } from "next/navigation";
-import dynamic from "next/dynamic";
+import { QuestionSchema } from "@/lib/validations";
+import Image from "next/image";
+import { usePathname, useRouter } from "next/navigation";
+import { Badge } from "../ui/badge";
 
 const type: any = "create";
 
@@ -51,7 +50,7 @@ const Question = ({ mongoUserId }: Props) => {
   async function onSubmit(values: z.infer<typeof QuestionSchema>) {
     setIsSubmitting(true);
     try {
-      //Todo: make a async call to your API -> create question
+      // Todo: make a async call to your API -> create question
       await createQuestion({
         title: values.title,
         tags: values.tags,
@@ -60,7 +59,7 @@ const Question = ({ mongoUserId }: Props) => {
         path: pathname,
       });
 
-      //Todo: contain all form data
+      // Todo: contain all form data
 
       //* navigate to home page
       router.push("/");

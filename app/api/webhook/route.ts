@@ -17,12 +17,12 @@ export async function POST(req: Request) {
 
   // Get the headers
   const headerPayload = headers();
-  const svix_id = headerPayload.get("svix-id");
-  const svix_timestamp = headerPayload.get("svix-timestamp");
-  const svix_signature = headerPayload.get("svix-signature");
+  const svixId = headerPayload.get("svix-id");
+  const svixTimestamp = headerPayload.get("svix-timestamp");
+  const svixSignature = headerPayload.get("svix-signature");
 
   // If there are no headers, error out
-  if (!svix_id || !svix_timestamp || !svix_signature) {
+  if (!svixId || !svixTimestamp || !svixSignature) {
     return new Response("Error occured -- no svix headers", {
       status: 400,
     });
@@ -40,9 +40,9 @@ export async function POST(req: Request) {
   // Verify the payload with the headers
   try {
     evt = wh.verify(body, {
-      "svix-id": svix_id,
-      "svix-timestamp": svix_timestamp,
-      "svix-signature": svix_signature,
+      "svix-id": svixId,
+      "svix-timestamp": svixTimestamp,
+      "svix-signature": svixSignature,
     }) as WebhookEvent;
   } catch (err) {
     console.error("Error verifying webhook:", err);
@@ -56,13 +56,19 @@ export async function POST(req: Request) {
   const eventType = evt.type;
 
   if (eventType === "user.created") {
-    const { id, image_url, first_name, last_name, email_addresses, username } =
-      evt.data;
+    const {
+      id,
+      image_url: imageUrl,
+      first_name: firstName,
+      last_name: lastName,
+      email_addresses: emailAddresses,
+      username
+    } = evt.data;
     const mongoUser = await createUser({
       clerkId: id,
-      name: `${first_name}${last_name ? ` ${last_name}` : ""}`,
-      picture: image_url,
-      email: email_addresses[0].email_address,
+      name: `${firstName}${lastName ? ` ${lastName}` : ""}`,
+      picture: imageUrl,
+      email: emailAddresses[0].email_address,
       username: username!,
     });
 
@@ -72,14 +78,20 @@ export async function POST(req: Request) {
     );
   }
   if (eventType === "user.updated") {
-    const { id, image_url, first_name, last_name, email_addresses, username } =
-      evt.data;
+    const {
+      id,
+      image_url: imageUrl,
+      first_name: firstName,
+      last_name: lastName,
+      email_addresses: emailAddresses,
+      username
+    } = evt.data;
     const mongoUser = await updateUser({
       clerkId: id,
       updateData: {
-        name: `${first_name}${last_name ? ` ${last_name}` : ""}`,
-        picture: image_url,
-        email: email_addresses[0].email_address,
+        name: `${firstName}${lastName ? ` ${lastName}` : ""}`,
+        picture: imageUrl,
+        email: emailAddresses[0].email_address,
         username: username!,
       },
       path: `/profile/${id}`,
