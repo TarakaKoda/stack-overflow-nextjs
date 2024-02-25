@@ -2,7 +2,8 @@
 
 import User from "@/database/user.model";
 import { connectToDatabase } from "../mongoose";
-import { GetTopInteractedTagsParams } from "./shared.types";
+import { GetAllTagsParams, GetTopInteractedTagsParams } from "./shared.types";
+import Tag from "@/database/tag.model";
 
 export async function getTopInteractedTags(params: GetTopInteractedTagsParams) {
   try {
@@ -23,6 +24,20 @@ export async function getTopInteractedTags(params: GetTopInteractedTagsParams) {
       { _id: "2", name: "Tag2" },
       { _id: "3", name: "Tag3" },
     ]; // * for now we can return these fake tags so that we can work on the tags badge in the user card.
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function getAllTags(params: GetAllTagsParams) {
+  try {
+    connectToDatabase();
+    const tags = await Tag.find({});
+    if (!tags) {
+      throw new Error("No tags found.");
+    }
+    return { tags };
   } catch (error) {
     console.log(error);
     throw error;

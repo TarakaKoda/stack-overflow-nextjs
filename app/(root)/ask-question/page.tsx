@@ -3,7 +3,7 @@ import { getUserById } from "@/lib/actions/user.action";
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 
-const Page = async () => {
+const AskQuestionPage = async () => {
   const { userId } = auth();
 
   if (!userId) redirect("/sign-in");
@@ -21,4 +21,4 @@ const Page = async () => {
   );
 };
 
-export default Page;
+export default AskQuestionPage;
