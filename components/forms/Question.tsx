@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
+import { useTheme } from "@/context/ThemeProvider";
 import { createQuestion } from "@/lib/actions/question.action";
 import { QuestionSchema } from "@/lib/validations";
 import Image from "next/image";
@@ -32,6 +33,7 @@ interface Props {
 }
 
 const Question = ({ mongoUserId }: Props) => {
+  const { mode } = useTheme();
   const router = useRouter();
   const pathname = usePathname();
   const editorRef = useRef(null);
@@ -166,13 +168,14 @@ const Question = ({ mongoUserId }: Props) => {
                       "insertdatetime",
                       "media",
                       "table",
-                      "wordcount",
                     ],
                     toolbar:
                       "undo redo | " +
                       "codesample | bold italic forecolor | alignleft aligncenter |" +
                       "alignright alignjustify | bullist numlist",
                     content_style: "body { font-family:Inter; font-size:16px }",
+                    skin: mode === "dark" ? "oxide-dark" : "oxide",
+                    content_css: mode === "dark" ? "dark" : "light",
                   }}
                 />
               </FormControl>

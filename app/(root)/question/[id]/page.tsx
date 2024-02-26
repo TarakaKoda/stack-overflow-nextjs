@@ -1,11 +1,12 @@
-import { getQuestionById } from "@/lib/actions/question.action";
-import Link from "next/link";
-import Image from "next/image";
+import Answer from "@/components/forms/Answer";
 import Metric from "@/components/shared/Metric";
-import { getFormattedNumber, getTimestamp } from "@/lib/utils";
 import ParseHTML from "@/components/shared/ParseHTML";
 import RenderTag from "@/components/shared/RenderTag";
 import { ITag } from "@/database/tag.model";
+import { getQuestionById } from "@/lib/actions/question.action";
+import { getFormattedNumber, getTimestamp } from "@/lib/utils";
+import Image from "next/image";
+import Link from "next/link";
 
 interface Props {
   params: { id: string };
@@ -61,7 +62,7 @@ const QuestionDetailPage = async ({ params: { id } }: Props) => {
         />
       </div>
       <ParseHTML data={question.content} />
-      <div className="flex flex-wrap gap-2 mt-8">
+      <div className="mb-4 mt-8 flex flex-wrap gap-2">
         {question.tags.map((tag: ITag) => (
           <RenderTag
             key={tag._id}
@@ -71,6 +72,7 @@ const QuestionDetailPage = async ({ params: { id } }: Props) => {
           />
         ))}
       </div>
+      <Answer />
     </>
   );
 };
