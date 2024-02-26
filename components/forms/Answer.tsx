@@ -1,23 +1,23 @@
 "use client";
 
 import { useTheme } from "@/context/ThemeProvider";
+import { createAnswer } from "@/lib/actions/answer.action";
 import { AnswerSchema } from "@/lib/validations";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Editor } from "@tinymce/tinymce-react";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { TypeOf, z } from "zod";
+import { z } from "zod";
 import { Button } from "../ui/button";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormMessage,
 } from "../ui/form";
-import { createAnswer } from "@/lib/actions/answer.action";
-import { usePathname } from "next/navigation";
 
 interface Props {
   authorId: string;

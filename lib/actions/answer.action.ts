@@ -1,11 +1,10 @@
 "use server";
 
 import Answer from "@/database/answer.model";
-import { connectToDatabase } from "../mongoose";
-import { CreateAnswerParams, GetAnswersParams } from "./shared.types";
 import Question from "@/database/question.model";
 import { revalidatePath } from "next/cache";
-import path from "path";
+import { connectToDatabase } from "../mongoose";
+import { CreateAnswerParams, GetAnswersParams } from "./shared.types";
 
 export async function createAnswer(params: CreateAnswerParams) {
   try {
