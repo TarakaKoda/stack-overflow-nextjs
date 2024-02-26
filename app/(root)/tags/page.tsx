@@ -6,7 +6,7 @@ import { getAllTags } from "@/lib/actions/tag.action";
 import Link from "next/link";
 
 const TagsPage = async () => {
-  const result = await getAllTags({});
+  const result = await getAllTags({}); 
 
   console.log(result.tags);
 
