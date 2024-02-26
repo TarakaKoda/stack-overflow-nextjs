@@ -4,6 +4,8 @@ import Image from "next/image";
 import Metric from "@/components/shared/Metric";
 import { getFormattedNumber, getTimestamp } from "@/lib/utils";
 import ParseHTML from "@/components/shared/ParseHTML";
+import RenderTag from "@/components/shared/RenderTag";
+import { ITag } from "@/database/tag.model";
 
 interface Props {
   params: { id: string };
@@ -58,7 +60,17 @@ const QuestionDetailPage = async ({ params: { id } }: Props) => {
           textStyles="small-medium text-dark400_light800"
         />
       </div>
-      <ParseHTML />
+      <ParseHTML data={question.content} />
+      <div className="flex flex-wrap gap-2 mt-8">
+        {question.tags.map((tag: ITag) => (
+          <RenderTag
+            key={tag._id}
+            _id={tag._id}
+            name={tag.name}
+            showCount={false}
+          />
+        ))}
+      </div>
     </>
   );
 };
