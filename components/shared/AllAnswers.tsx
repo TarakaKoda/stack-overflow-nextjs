@@ -15,7 +15,6 @@ interface Props {
 }
 
 const AllAnswers = async ({ questionId, userId, totalAnswers }: Props) => {
-  console.log(questionId);
   const result = await getAnswers({ questionId: JSON.parse(questionId) });
   return (
     <div className="mt-11">
