@@ -7,17 +7,26 @@ import { Editor } from "@tinymce/tinymce-react";
 import Image from "next/image";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { TypeOf, z } from "zod";
 import { Button } from "../ui/button";
 import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormMessage,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
 } from "../ui/form";
+import { createAnswer } from "@/lib/actions/answer.action";
+import { usePathname } from "next/navigation";
 
-const Answer = () => {
+interface Props {
+  authorId: string;
+  question: string;
+  questionId: string;
+}
+
+const Answer = ({ authorId, question, questionId }: Props) => {
+  const pathname = usePathname();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const { mode } = useTheme();
   const editorRef = useRef(null);
@@ -28,10 +37,23 @@ const Answer = () => {
     },
   });
 
-  const handleCreateAnswer = () => {
+  const handleCreateAnswer = async (values: z.infer<typeof AnswerSchema>) => {
     // ? create new answer function.
     try {
       setIsSubmitting(true);
+      await createAnswer({
+        content: values.answer,
+        author: JSON.parse(authorId),
+        question: JSON.parse(questionId),
+        path: pathname,
+      });
+
+      form.reset();
+      
+      if (editorRef.current) {
+        const editor = editorRef.current as any;
+        editor.setContent("");
+      }
     } catch (error) {
       console.log(error);
     } finally {
@@ -121,7 +143,7 @@ const Answer = () => {
               disabled={isSubmitting}
               className="primary-gradient w-fit text-white"
             >
-              {isSubmitting ? "isSubmitting..." : "Submit"}
+              {isSubmitting ? "Submitting..." : "Submit"}
             </Button>
           </div>
         </form>

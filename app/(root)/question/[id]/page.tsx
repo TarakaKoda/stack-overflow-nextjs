@@ -1,10 +1,13 @@
 import Answer from "@/components/forms/Answer";
+import AllAnswers from "@/components/shared/AllAnswers";
 import Metric from "@/components/shared/Metric";
 import ParseHTML from "@/components/shared/ParseHTML";
 import RenderTag from "@/components/shared/RenderTag";
 import { ITag } from "@/database/tag.model";
 import { getQuestionById } from "@/lib/actions/question.action";
+import { getUserById } from "@/lib/actions/user.action";
 import { getFormattedNumber, getTimestamp } from "@/lib/utils";
+import { auth } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -14,6 +17,13 @@ interface Props {
 
 const QuestionDetailPage = async ({ params: { id } }: Props) => {
   const { question } = await getQuestionById({ questionId: id });
+  const { userId: clerkId } = auth();
+
+  let mongoUserId;
+
+  if (clerkId) {
+    mongoUserId = await getUserById({ userId: clerkId });
+  }
 
   return (
     <>
@@ -62,7 +72,7 @@ const QuestionDetailPage = async ({ params: { id } }: Props) => {
         />
       </div>
       <ParseHTML data={question.content} />
-      <div className="mb-4 mt-8 flex flex-wrap gap-2">
+      <div className="mt-8 flex flex-wrap gap-2">
         {question.tags.map((tag: ITag) => (
           <RenderTag
             key={tag._id}
@@ -72,7 +82,16 @@ const QuestionDetailPage = async ({ params: { id } }: Props) => {
           />
         ))}
       </div>
-      <Answer />
+      <AllAnswers
+        questionId={JSON.stringify(question._id)}
+        userId={JSON.stringify(mongoUserId)}
+        totalAnswers={question.answers.length}
+      />
+      <Answer
+        question={question.content}
+        questionId={JSON.stringify(question._id)}
+        authorId={JSON.stringify(mongoUserId)}
+      />
     </>
   );
 };
