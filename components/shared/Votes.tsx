@@ -1,7 +1,13 @@
 "use client";
 
+import { downvoteAnswer, upvoteAnswer } from "@/lib/actions/answer.action";
+import {
+  downvoteQuestion,
+  upvoteQuestion,
+} from "@/lib/actions/question.action";
 import { getFormattedNumber } from "@/lib/utils";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 interface Props {
   type: string;
@@ -24,7 +30,56 @@ const Votes = ({
   hasDownVoted,
   hasSaved,
 }: Props) => {
-  const handleVote = (voteAction: string) => {};
+  const pathname = usePathname();
+
+  const handleVote = async (voteAction: string) => {
+    if (!userId) {
+      return;
+    }
+    if (voteAction === "upvote") {
+      if (type === "question") {
+        await upvoteQuestion({
+          questionId: JSON.parse(itemId),
+          userId: JSON.parse(userId),
+          hasdownVoted: hasDownVoted,
+          hasupVoted: hasUpVoted,
+          path: pathname,
+        });
+      } else if (type === "answer") {
+        await upvoteAnswer({
+          answerId: JSON.parse(itemId),
+          userId: JSON.parse(userId),
+          hasdownVoted: hasDownVoted,
+          hasupVoted: hasUpVoted,
+          path: pathname,
+        });
+      }
+
+      // Todo: show a toast...
+    }
+
+    if (voteAction === "downvote") {
+      if (type === "question") {
+        await downvoteQuestion({
+          questionId: JSON.parse(itemId),
+          userId: JSON.parse(userId),
+          hasdownVoted: hasDownVoted,
+          hasupVoted: hasUpVoted,
+          path: pathname,
+        });
+      } else if (type === "answer") {
+        await downvoteAnswer({
+          answerId: JSON.parse(itemId),
+          userId: JSON.parse(userId),
+          hasdownVoted: hasDownVoted,
+          hasupVoted: hasUpVoted,
+          path: pathname,
+        });
+      }
+
+      // Todo: show a toast...
+    }
+  };
 
   const handleSave = () => {};
 
