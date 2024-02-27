@@ -5,6 +5,7 @@ import { UserFilters } from "@/constants/filters";
 import { getAllUsers } from "@/lib/actions/user.action";
 import Link from "next/link";
 
+
 const CommunityPage = async () => {
   const result = await getAllUsers({});
 
@@ -27,7 +28,7 @@ const CommunityPage = async () => {
       </div>
       <section className="mt-12 flex flex-wrap gap-4">
         {result.users.length > 0 ? (
-          result.users.map((user) => <UserCard key={user._id} user={user} />)
+          result.users.map((user: any) => (<UserCard key={user._id} user={user} />))
         ) : (
           <div className="paragraph-regular text-dark200_light800 mx-auto max-w-4xl text-center">
             <p>No users yet</p>
