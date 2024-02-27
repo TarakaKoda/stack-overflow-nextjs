@@ -11,6 +11,7 @@ import { getFormattedNumber, getTimestamp } from "@/lib/utils";
 import { auth } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 interface Props {
   params: { id: string };
@@ -24,6 +25,8 @@ const QuestionDetailPage = async ({ params: { id } }: Props) => {
 
   if (clerkId) {
     mongoUserId = await getUserById({ userId: clerkId });
+  } else {
+    return redirect("/sign-in");
   }
 
   return (
@@ -52,7 +55,7 @@ const QuestionDetailPage = async ({ params: { id } }: Props) => {
               hasUpVoted={question.upvotes.includes(mongoUserId._id)}
               downvotes={question.downvotes.length}
               hasDownVoted={question.downvotes.includes(mongoUserId._id)}
-              hasSaved={mongoUserId?.saved.includes(question._id)}
+              hasSaved={mongoUserId.saved.includes(question._id)}
             />
           </div>
         </div>
