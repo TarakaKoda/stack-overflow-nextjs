@@ -3,6 +3,7 @@ import AllAnswers from "@/components/shared/AllAnswers";
 import Metric from "@/components/shared/Metric";
 import ParseHTML from "@/components/shared/ParseHTML";
 import RenderTag from "@/components/shared/RenderTag";
+import Votes from "@/components/shared/Votes";
 import { ITag } from "@/database/tag.model";
 import { getQuestionById } from "@/lib/actions/question.action";
 import { getUserById } from "@/lib/actions/user.action";
@@ -42,7 +43,18 @@ const QuestionDetailPage = async ({ params: { id } }: Props) => {
             />
             <p className="paragraph-semibold text-dark300_light700">{`${question.author.name}`}</p>
           </Link>
-          <div className="flex justify-end">Voting</div>
+          <div className="flex justify-end">
+            <Votes
+              type="question"
+              itemId={JSON.stringify(question._id)}
+              userId={JSON.stringify(mongoUserId._id)}
+              upvotes={question.upvotes.length}
+              hasUpVoted={question.upvotes.includes(mongoUserId._id)}
+              downvotes={question.downvotes.length}
+              hasDownVoted={question.downvotes.includes(mongoUserId._id)}
+              hasSaved={mongoUserId?.saved.includes(question._id)}
+            />
+          </div>
         </div>
         <h2 className="h2-semibold text-dark200_light900 mt-3.5 w-full text-left">
           {question.title}
