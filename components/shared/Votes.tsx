@@ -17,7 +17,7 @@ interface Props {
   hasUpVoted: boolean;
   downvotes: number;
   hasDownVoted: boolean;
-  hasSaved: boolean;
+  hasSaved?: boolean;
 }
 
 const Votes = ({
@@ -127,18 +127,20 @@ const Votes = ({
           </div>
         </div>
       </div>
-      <Image
-        src={
-          hasSaved
-            ? "/assets/icons/star-filled.svg"
-            : "/assets/icons/star-red.svg"
-        }
-        alt="downVote"
-        height={18}
-        width={18}
-        className="cursor-pointer"
-        onClick={handleSave}
-      />
+      {type === "question" && (
+        <Image
+          src={
+            hasSaved
+              ? "/assets/icons/star-filled.svg"
+              : "/assets/icons/star-red.svg"
+          }
+          alt="downVote"
+          height={18}
+          width={18}
+          className="cursor-pointer"
+          onClick={handleSave}
+        />
+      )}
     </div>
   );
 };

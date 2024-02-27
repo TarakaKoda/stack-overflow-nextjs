@@ -1,11 +1,11 @@
 import { AnswerFilters } from "@/constants/filters";
 import { getAnswers } from "@/lib/actions/answer.action";
-import Filter from "./Filter";
-import Link from "next/link";
-import Image from "next/image";
 import { getTimestamp } from "@/lib/utils";
+import Image from "next/image";
+import Link from "next/link";
+import Filter from "./Filter";
 import ParseHTML from "./ParseHTML";
-// import Votes from "./Votes";
+import Votes from "./Votes";
 
 interface Props {
   questionId: string;
@@ -43,18 +43,26 @@ const AllAnswers = async ({ questionId, userId, totalAnswers }: Props) => {
                     <p className="body-semibold text-dark300_light700 ">
                       {answer.author.name}
                     </p>
-                    <p className="small-regular text-dark400_light500 mt-0.5 line-clamp-1 ml-0.5">
+                    <p className="small-regular text-dark400_light500 ml-0.5 mt-0.5 line-clamp-1">
                       <span className="max-sm:hidden"> -</span> answered{" "}
                       {getTimestamp(answer.createdAt)}
                     </p>
                   </div>
                 </Link>
                 <div className="flex justify-end">
-                {/* <Votes/> */}
+                  <Votes
+                    type="answer"
+                    itemId={JSON.stringify(answer._id)}
+                    userId={JSON.stringify(userId)}
+                    upvotes={answer.upvotes.length}
+                    hasUpVoted={answer.upvotes.includes(userId)}
+                    downvotes={answer.downvotes.length}
+                    hasDownVoted={answer.downvotes.includes(userId)}
+                  />
                 </div>
               </div>
             </div>
-              <ParseHTML data={answer.content}/>
+            <ParseHTML data={answer.content} />
           </article>
         ))}
       </div>

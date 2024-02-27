@@ -60,8 +60,8 @@ export async function upvoteAnswer(params: AnswerVoteParams) {
       };
     } else if (hasdownVoted) {
       updateQuery = {
-        $pull: { upvotes: userId },
-        $push: { downvotes: userId },
+        $pull: { downvotes: userId },
+        $push: { upvotes: userId },
       };
     } else {
       updateQuery = {
@@ -73,7 +73,7 @@ export async function upvoteAnswer(params: AnswerVoteParams) {
       new: true,
     });
 
-    if (answer) {
+    if (!answer) {
       throw new Error("Answer no found");
     }
 
@@ -97,12 +97,12 @@ export async function downvoteAnswer(params: AnswerVoteParams) {
       };
     } else if (hasupVoted) {
       updateQuery = {
-        $pull: { downvotes: userId },
-        $push: { upvotes: userId },
+        $pull: { upvotes: userId },
+        $push: { downvotes: userId },
       };
     } else {
       updateQuery = {
-        $addToSet: { downAnswer: userId },
+        $addToSet: { downvotes: userId },
       };
     }
 
@@ -110,7 +110,7 @@ export async function downvoteAnswer(params: AnswerVoteParams) {
       new: true,
     });
 
-    if (answer) {
+    if (!answer) {
       throw new Error("Answer no found");
     }
 

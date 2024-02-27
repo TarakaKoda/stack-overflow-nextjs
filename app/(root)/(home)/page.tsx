@@ -43,7 +43,7 @@ export default async function Home() {
               tags={question.tags}
               title={question.title}
               author={question.author}
-              upvotes={question.upvotes}
+              upvotes={question.upvotes.length}
               answers={question.answers}
               views={question.views}
               _id={question._id}

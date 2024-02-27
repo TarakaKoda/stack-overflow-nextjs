@@ -96,7 +96,7 @@ const QuestionDetailPage = async ({ params: { id } }: Props) => {
       </div>
       <AllAnswers
         questionId={JSON.stringify(question._id)}
-        userId={JSON.stringify(mongoUserId)}
+        userId={mongoUserId._id}
         totalAnswers={question.answers.length}
       />
       <Answer
