@@ -1,4 +1,5 @@
 import ProfileLink from "@/components/shared/ProfileLink";
+import Stats from "@/components/shared/Stats";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getUserInfo } from "@/lib/actions/user.action";
@@ -13,7 +14,7 @@ const ProfileDetailPage = async ({
   searchParams: { q },
 }: URLProps) => {
   const { userId: clerkId } = auth();
-  const { user } = await getUserInfo({
+  const { user, totalQuestions, totalAnswers } = await getUserInfo({
     userId: id,
   });
   return (
@@ -70,7 +71,7 @@ const ProfileDetailPage = async ({
           </SignedIn>
         </div>
       </div>
-      Stats
+      <Stats totalQuestions={totalQuestions} totalAnswers={totalAnswers} />
       <div className="mt-10 flex gap-10">
         <Tabs defaultValue="top-posts" className="flex-1">
           <TabsList className="background-light800_dark400 min-h-[42px] p-1">
