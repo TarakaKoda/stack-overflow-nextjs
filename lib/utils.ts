@@ -40,4 +40,26 @@ export const getFormattedNumber = (number: number): string => {
   return `${(number / 1000000000).toFixed(1)}B`; // Convert to B for number n > 1 billion
 };
 
+export const getActualDateAndMonth = (dateString: Date): string => {
+  const date = new Date(dateString);
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
 
+  const day = date.getDate();
+  const month = months[date.getMonth()];
+  const year = date.getFullYear();
+
+  return `${month} ${day} ${year}`;
+};

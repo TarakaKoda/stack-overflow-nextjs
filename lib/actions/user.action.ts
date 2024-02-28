@@ -15,6 +15,7 @@ import {
 } from "./shared.types";
 import Tag from "@/database/tag.model";
 import { FilterQuery } from "mongoose";
+import Answer from "@/database/answer.model";
 
 export async function getUserById(params: GetUserByIdParams) {
   try {
@@ -155,6 +156,29 @@ export async function getSavedQuestions(params: GetSavedQuestionParams) {
     const savedQuestions = user.saved;
 
     return { questions: savedQuestions };
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function getUserInfo(params: GetUserByIdParams) {
+  try {
+    connectToDatabase();
+    const { userId } = params;
+
+    const user = await User.findOne({ clerkId: userId });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+    const totalQuestions = await Question.countDocuments({ author: user._id });
+    const totalAnswers = await Answer.countDocuments({ author: user._id });
+    return {
+      user,
+      totalAnswers,
+      totalQuestions,
+    };
   } catch (error) {
     console.log(error);
     throw error;

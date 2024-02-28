@@ -1,4 +1,3 @@
-import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -42,7 +41,7 @@ const Metric = ({
   );
   if (href) {
     return (
-      <Link href="href" className="flex-center gap-1">
+      <Link href={href} className="flex-center gap-1">
         {metricContent}
       </Link>
     );
