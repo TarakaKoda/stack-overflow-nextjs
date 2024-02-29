@@ -15,7 +15,11 @@ const LeftSidebar = () => {
   const { userId } = useAuth();
 
   const filteredLinks = userId
-    ? sidebarLinks
+    ? sidebarLinks.map((link) =>
+        link.route === "/profile"
+          ? { ...link, route: `${link.route}/${userId}` }
+          : link,
+      )
     : sidebarLinks.filter((link) => link.route !== "/profile");
 
   return (
