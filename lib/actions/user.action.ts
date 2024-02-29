@@ -167,8 +167,8 @@ export async function getUserInfo(params: GetUserByIdParams) {
   try {
     connectToDatabase();
     const { userId } = params;
-    
-    const user = await User.findOne({userId});
+
+    const user = await User.findOne({ userId });
 
     if (!user) {
       throw new Error("User not found");
@@ -195,6 +195,7 @@ export async function getUserQuestions(params: GetUserStatsParams) {
     const totalQuestions = await Question.countDocuments({ author: userId });
 
     const UserQuestions = await Question.find({ author: userId })
+      .sort({ views: -1, upvotes: -1 })
       .populate({
         path: "tags",
         model: Tag,
@@ -207,6 +208,29 @@ export async function getUserQuestions(params: GetUserStatsParams) {
       });
 
     return { questions: UserQuestions, totalQuestions };
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+export async function getUserAnswers(params: GetUserStatsParams) {
+  try {
+    connectToDatabase();
+
+    const { userId } = params;
+
+    const totalAnswers = await Answer.countDocuments({ author: userId });
+
+    const UserAnswers = await Answer.find({ author: userId })
+      .sort({ upvotes: -1 })
+      .populate({ path: "question", model: Question, select: "_id title" })
+      .populate({
+        path: "author",
+        model: User,
+        select: "_id clerkId name picture",
+      });
+
+    return { answers: UserAnswers, totalAnswers };
   } catch (error) {
     console.log(error);
     throw error;
