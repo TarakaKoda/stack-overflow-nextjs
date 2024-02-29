@@ -10,6 +10,7 @@ import {
   GetAllUsersParams,
   GetSavedQuestionParams,
   GetUserByIdParams,
+  GetUserStatsParams,
   ToggleSaveQuestionParams,
   UpdateUserParams,
 } from "./shared.types";
@@ -166,8 +167,8 @@ export async function getUserInfo(params: GetUserByIdParams) {
   try {
     connectToDatabase();
     const { userId } = params;
-
-    const user = await User.findOne({ clerkId: userId });
+    
+    const user = await User.findOne({userId});
 
     if (!user) {
       throw new Error("User not found");
@@ -179,6 +180,33 @@ export async function getUserInfo(params: GetUserByIdParams) {
       totalAnswers,
       totalQuestions,
     };
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function getUserQuestions(params: GetUserStatsParams) {
+  try {
+    connectToDatabase();
+
+    const { userId } = params;
+
+    const totalQuestions = await Question.countDocuments({ author: userId });
+
+    const UserQuestions = await Question.find({ author: userId })
+      .populate({
+        path: "tags",
+        model: Tag,
+        select: "_id name",
+      })
+      .populate({
+        path: "author",
+        model: User,
+        select: "_id clerkId name picture",
+      });
+
+    return { questions: UserQuestions, totalQuestions };
   } catch (error) {
     console.log(error);
     throw error;
