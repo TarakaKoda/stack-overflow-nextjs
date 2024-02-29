@@ -7,10 +7,13 @@ import { revalidatePath } from "next/cache";
 import { connectToDatabase } from "../mongoose";
 import {
   CreateQuestionParams,
+  DeleteQuestionParams,
   GetQuestionByIdParams,
   GetQuestionsParams,
   QuestionVoteParams,
 } from "./shared.types";
+import Answer from "@/database/answer.model";
+import Interaction from "@/database/interaction.model";
 
 export async function createQuestion(params: CreateQuestionParams) {
   try {
@@ -165,3 +168,23 @@ export async function downvoteQuestion(params: QuestionVoteParams) {
     throw error;
   }
 }
+
+export async function deleteQuestion(params: DeleteQuestionParams) {
+  try {
+    connectToDatabase();
+
+    const { questionId, path } = params;
+
+    await Question.deleteOne({ _id: questionId });
+    await Answer.deleteMany({ question: questionId });
+    await Interaction.deleteMany({ question: questionId });
+
+    await Tag.updateMany({questions: questionId}, {$pull: {questions: questionId}})
+
+    revalidatePath(path)
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
