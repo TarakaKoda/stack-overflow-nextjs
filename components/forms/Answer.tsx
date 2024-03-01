@@ -12,11 +12,11 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "../ui/button";
 import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormMessage,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
 } from "../ui/form";
 
 interface Props {
@@ -49,7 +49,7 @@ const Answer = ({ authorId, question, questionId }: Props) => {
       });
 
       form.reset();
-      
+
       if (editorRef.current) {
         const editor = editorRef.current as any;
         editor.setContent("");
