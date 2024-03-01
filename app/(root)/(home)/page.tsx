@@ -6,11 +6,9 @@ import LocalSearchBar from "@/components/shared/search/LocalSearchBar";
 import { Button } from "@/components/ui/button";
 import { HomePageFilters } from "@/constants/filters";
 import { getQuestions } from "@/lib/actions/question.action";
-import { auth } from "@clerk/nextjs";
 import Link from "next/link";
 
 export default async function Home() {
-  const { userId: clerkId } = auth();
   const result = await getQuestions({});
   return (
     <>
@@ -41,7 +39,6 @@ export default async function Home() {
         {result.questions.length > 0 ? (
           result.questions.map((question) => (
             <QuestionCard
-              clerkId={clerkId}
               key={question._id}
               tags={question.tags}
               title={question.title}
