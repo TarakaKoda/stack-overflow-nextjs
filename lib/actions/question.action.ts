@@ -196,7 +196,7 @@ export async function editQuestion(params: EditQuestionParams) {
   try {
     connectToDatabase();
 
-    const { content, path, title, questionId} = params;
+    const { content, path, title, questionId } = params;
 
     const question = await Question.findById(questionId).populate("tags");
 
