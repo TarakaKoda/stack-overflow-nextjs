@@ -1,10 +1,7 @@
 "use server";
 
-import Answer from "@/database/answer.model";
 import Question from "@/database/question.model";
-import Tag from "@/database/tag.model";
 import User from "@/database/user.model";
-import { FilterQuery } from "mongoose";
 import { revalidatePath } from "next/cache";
 import { connectToDatabase } from "../mongoose";
 import {
@@ -17,6 +14,9 @@ import {
   ToggleSaveQuestionParams,
   UpdateUserParams,
 } from "./shared.types";
+import Tag from "@/database/tag.model";
+import { FilterQuery } from "mongoose";
+import Answer from "@/database/answer.model";
 
 export async function getUserById(params: GetUserByIdParams) {
   try {
@@ -48,7 +48,7 @@ export async function updateUser(updatedData: UpdateUserParams) {
     await User.findOneAndUpdate({ clerkId }, updateData, {
       new: true,
     });
-    
+
     revalidatePath(path);
   } catch (error) {
     console.log(error);
