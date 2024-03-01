@@ -118,7 +118,6 @@ export interface DeleteQuestionParams extends QuestionId, Path {
 
 export interface EditQuestionParams extends QuestionId, Path, Content {
   title: string;
-  tags?: string[];
 }
 
 /**

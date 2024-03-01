@@ -20,31 +20,37 @@ import {
 import { Input } from "@/components/ui/input";
 
 import { useTheme } from "@/context/ThemeProvider";
-import { createQuestion } from "@/lib/actions/question.action";
+import { createQuestion, editQuestion } from "@/lib/actions/question.action";
 import { QuestionSchema } from "@/lib/validations";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { Badge } from "../ui/badge";
-
-const type: any = "create";
+import { ITag } from "@/database/tag.model";
 
 interface Props {
   mongoUserId: string;
+  type?: string;
+  questionDetails?: string;
 }
 
-const Question = ({ mongoUserId }: Props) => {
+const Question = ({ mongoUserId, type, questionDetails }: Props) => {
   const { mode } = useTheme();
   const router = useRouter();
   const pathname = usePathname();
   const editorRef = useRef(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const parsedQuestionDetails = JSON.parse(questionDetails || "");
+
+  const groupTags = parsedQuestionDetails.tags.map((tag: ITag) => tag.name);
+
   // 1. Define your form.
   const form = useForm<z.infer<typeof QuestionSchema>>({
     resolver: zodResolver(QuestionSchema),
     defaultValues: {
-      title: "",
-      explanation: "",
-      tags: [],
+      title: parsedQuestionDetails.title || "",
+      explanation: parsedQuestionDetails.content || "",
+      tags: groupTags || [],
     },
   });
 
@@ -52,19 +58,31 @@ const Question = ({ mongoUserId }: Props) => {
   async function onSubmit(values: z.infer<typeof QuestionSchema>) {
     setIsSubmitting(true);
     try {
-      // Todo: make a async call to your API -> create question
-      await createQuestion({
-        title: values.title,
-        tags: values.tags,
-        content: values.explanation,
-        author: JSON.parse(mongoUserId),
-        path: pathname,
-      });
+      if (type === "edit") {
+        await editQuestion({
+          title: values.title,
+          content: values.explanation,
+          path: pathname,
+          questionId: parsedQuestionDetails._id,
+        });
 
-      // Todo: contain all form data
+        //* navigate to question detail page
+        router.push(`/question/${parsedQuestionDetails._id}`);
+      } else {
+        // Todo: make a async call to your API -> create question
+        await createQuestion({
+          title: values.title,
+          tags: values.tags,
+          content: values.explanation,
+          author: JSON.parse(mongoUserId),
+          path: pathname,
+        });
 
-      //* navigate to home page
-      router.push("/");
+        // Todo: contain all form data
+
+        //* navigate to home page
+        router.push("/");
+      }
     } catch (error) {
     } finally {
       setIsSubmitting(false);
@@ -148,7 +166,7 @@ const Question = ({ mongoUserId }: Props) => {
                   }}
                   onBlur={field.onBlur}
                   onEditorChange={(content) => field.onChange(content)}
-                  initialValue=""
+                  initialValue={parsedQuestionDetails.content || ""}
                   init={{
                     height: 350,
                     menubar: false,
@@ -198,6 +216,7 @@ const Question = ({ mongoUserId }: Props) => {
               <FormControl className="mt-3.5">
                 <>
                   <Input
+                    disabled={type === "edit"}
                     className="no-focus paragraph-regular background-light900_dark300 light-border-2 text-dark300_light700 min-h-[56px] border"
                     placeholder="Add tags..."
                     onKeyDown={(e) => handleInputKeyDown(e, field)}
@@ -208,16 +227,22 @@ const Question = ({ mongoUserId }: Props) => {
                         <Badge
                           key={tag}
                           className="subtle-medium background-light800_dark300 text-light400_light500 flex items-center justify-center gap-2 rounded-md border-none px-4 py-2 capitalize"
-                          onClick={() => handleTagRemove(tag, field)}
+                          onClick={() =>
+                            type !== "edit"
+                              ? handleTagRemove(tag, field)
+                              : () => {}
+                          }
                         >
                           {tag}
-                          <Image
-                            src="/assets/icons/close.svg"
-                            alt="close"
-                            width={12}
-                            height={12}
-                            className="cursor-pointer object-contain invert-0 dark:invert"
-                          />
+                          {type !== "edit" && (
+                            <Image
+                              src="/assets/icons/close.svg"
+                              alt="close"
+                              width={12}
+                              height={12}
+                              className="cursor-pointer object-contain invert-0 dark:invert"
+                            />
+                          )}
                         </Badge>
                       ))}
                     </div>

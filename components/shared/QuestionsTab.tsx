@@ -22,6 +22,7 @@ const QuestionsTab = async ({
         questions.map((question: any) => (
           <QuestionCard
             key={question._id}
+            clerkId={clerkId}
             tags={question.tags}
             title={question.title}
             author={question.author}
