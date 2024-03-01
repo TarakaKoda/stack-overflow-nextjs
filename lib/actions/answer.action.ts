@@ -139,7 +139,7 @@ export async function deleteAnswer(params: DeleteAnswerParams) {
 
     await Question.updateMany(
       { question: answerId },
-      { $pull: { answer: answerId } },
+      { $pull: { answers: answerId } },
     );
 
     await Interaction.deleteMany({ answer: answerId });

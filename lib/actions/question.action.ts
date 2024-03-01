@@ -8,6 +8,7 @@ import { connectToDatabase } from "../mongoose";
 import {
   CreateQuestionParams,
   DeleteQuestionParams,
+  EditQuestionParams,
   GetQuestionByIdParams,
   GetQuestionsParams,
   QuestionVoteParams,
@@ -179,12 +180,38 @@ export async function deleteQuestion(params: DeleteQuestionParams) {
     await Answer.deleteMany({ question: questionId });
     await Interaction.deleteMany({ question: questionId });
 
-    await Tag.updateMany({questions: questionId}, {$pull: {questions: questionId}})
+    await Tag.updateMany(
+      { questions: questionId },
+      { $pull: { questions: questionId } },
+    );
 
-    revalidatePath(path)
+    revalidatePath(path);
   } catch (error) {
     console.log(error);
     throw error;
   }
 }
 
+export async function editQuestion(params: EditQuestionParams) {
+  try {
+    connectToDatabase();
+
+    const { content, path, title, questionId} = params;
+
+    const question = await Question.findById(questionId).populate("tags");
+
+    if (!question) {
+      throw new Error("Question not found");
+    }
+
+    question.title = title;
+    question.content = content;
+
+    await question.save();
+
+    revalidatePath(path);
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}

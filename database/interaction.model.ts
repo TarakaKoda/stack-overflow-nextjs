@@ -2,7 +2,7 @@ import { Schema, Document, model, models } from "mongoose";
 
 export interface IInteraction extends Document {
   user: Schema.Types.ObjectId; // ? reference to user
-  action: "string";
+  action: string;
   question: Schema.Types.ObjectId; // ? reference to question
   answer: Schema.Types.ObjectId; // ? reference to answer
   tags: Schema.Types.ObjectId[]; // ? reference to tag
