@@ -67,7 +67,6 @@ const Profile = ({ clerkId, user }: Props) => {
     } finally {
       setIsSubmitting(false);
     }
-    console.log(values);
   }
 
   return (
