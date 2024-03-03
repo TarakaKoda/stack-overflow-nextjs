@@ -5,6 +5,37 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export const getActualDateAndMonth = (dateString: Date): string => {
+  const date = new Date(dateString);
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  const day = date.getDate();
+  const month = months[date.getMonth()];
+  const year = date.getFullYear();
+
+  return `${month} ${day} ${year}`;
+};
+
+export const getFormattedNumber = (number: number): string => {
+  if (number < 1000) return number.toString(); // Return the same number
+  if (number < 1000000) return `${(number / 1000).toFixed(1)}K`; // Convert to K for number from 1000 < n < 1 million
+  if (number < 1000000000) return `${(number / 1000000).toFixed(1)}M`; // Convert to M for number from 1 million < n < 1 billion
+  return `${(number / 1000000000).toFixed(1)}B`; // Convert to B for number n > 1 billion
+};
+
 export const getTimestamp = (createdAt: Date): string => {
   const now: Date = new Date();
   const timeDifference: number = now.getTime() - createdAt.getTime();
@@ -31,35 +62,4 @@ export const getTimestamp = (createdAt: Date): string => {
   }
 
   return "Just now";
-};
-
-export const getFormattedNumber = (number: number): string => {
-  if (number < 1000) return number.toString(); // Return the same number
-  if (number < 1000000) return `${(number / 1000).toFixed(1)}K`; // Convert to K for number from 1000 < n < 1 million
-  if (number < 1000000000) return `${(number / 1000000).toFixed(1)}M`; // Convert to M for number from 1 million < n < 1 billion
-  return `${(number / 1000000000).toFixed(1)}B`; // Convert to B for number n > 1 billion
-};
-
-export const getActualDateAndMonth = (dateString: Date): string => {
-  const date = new Date(dateString);
-  const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-
-  const day = date.getDate();
-  const month = months[date.getMonth()];
-  const year = date.getFullYear();
-
-  return `${month} ${day} ${year}`;
 };
