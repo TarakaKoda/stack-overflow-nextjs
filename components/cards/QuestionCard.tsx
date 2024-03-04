@@ -15,7 +15,7 @@ interface Author {
   _id: string;
   name: string;
   picture: string;
-  clerkId: string
+  clerkId: string;
 }
 
 interface Props {
@@ -55,12 +55,11 @@ const QuestionCard = ({
             </h3>
           </Link>
         </div>
-        <SignedIn>{showActionButtons && (
-        <EditDeleteAction 
-        type="question"
-        itemId={JSON.stringify(_id)}
-        />
-        )}</SignedIn>
+        <SignedIn>
+          {showActionButtons && (
+            <EditDeleteAction type="question" itemId={JSON.stringify(_id)} />
+          )}
+        </SignedIn>
       </div>
       <div className="mt-3.5 flex flex-wrap gap-2">
         {tags.map((tag) => (
@@ -73,7 +72,7 @@ const QuestionCard = ({
           alt="User"
           value={author.name}
           title={`- asked ${getTimestamp(createdAt)}`}
-          href={`/profile/${author._id}`}
+          href={`/profile/${author.clerkId}`}
           isAuthor
           textStyles="bogy-medium text-dark400_light700"
         />

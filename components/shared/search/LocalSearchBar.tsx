@@ -39,7 +39,7 @@ const LocalSearchBar = ({
         className="paragraph-regular no-focus placeholder background-light800_darkgradient border-none shadow-none outline-none"
         onChange={() => {}}
       />
-       {iconPosition === "right" && (
+      {iconPosition === "right" && (
         <Image
           src={imgSrc}
           alt="search Icon"
