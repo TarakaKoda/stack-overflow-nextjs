@@ -40,9 +40,13 @@ const Question = ({ mongoUserId, type, questionDetails }: Props) => {
   const editorRef = useRef(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const parsedQuestionDetails = JSON.parse(questionDetails || "");
+  const parsedQuestionDetails =
+    type === "edit" ? JSON.parse(questionDetails || "") : "";
 
-  const groupTags = parsedQuestionDetails.tags.map((tag: ITag) => tag.name);
+  const groupTags =
+    type === "edit"
+      ? parsedQuestionDetails.tags.map((tag: ITag) => tag.name)
+      : [];
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof QuestionSchema>>({

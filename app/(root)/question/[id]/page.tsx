@@ -50,7 +50,7 @@ const QuestionDetailPage = async ({ params: { id } }: Props) => {
           </Link>
           <div className="flex justify-end">
             <Votes
-              type="Question"
+              type="question"
               itemId={JSON.stringify(question._id)}
               userId={JSON.stringify(mongoUser._id)}
               upvotes={question.upvotes.length}
