@@ -87,9 +87,18 @@ export async function getAllUsers(params: GetAllUsersParams) {
   try {
     connectToDatabase();
 
-    // const { page = 1, pageSize = 10, filter, searchQuery } = params;
+    const { searchQuery } = params;
 
-    const users = await User.find({}).sort({ createdAt: -1 });
+    const query: FilterQuery<typeof User> = {};
+
+    if (searchQuery) {
+      query.$or = [
+        { name: { $regex: new RegExp(searchQuery, "i") } },
+        { username: { $regex: new RegExp(searchQuery, "i") } },
+      ];
+    }
+
+    const users = await User.find(query).sort({ createdAt: -1 });
     return { users };
   } catch (error) {
     console.log(error);
@@ -168,7 +177,7 @@ export async function getUserInfo(params: GetUserByIdParams) {
     connectToDatabase();
     const { userId } = params;
 
-    const user = await User.findOne({ userId });
+    const user = await User.findOne({ clerkId: userId });
 
     if (!user) {
       throw new Error("User not found");

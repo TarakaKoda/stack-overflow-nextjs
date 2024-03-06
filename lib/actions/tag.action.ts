@@ -15,7 +15,6 @@ export async function getTopInteractedTags(params: GetTopInteractedTagsParams) {
   try {
     connectToDatabase();
     const { userId } = params;
-
     const user = await User.findById(userId);
 
     if (!user) {
@@ -39,7 +38,16 @@ export async function getTopInteractedTags(params: GetTopInteractedTagsParams) {
 export async function getAllTags(params: GetAllTagsParams) {
   try {
     connectToDatabase();
-    const tags = await Tag.find({});
+
+    const { searchQuery } = params;
+
+    const query: FilterQuery<typeof Tag> = {};
+
+    if (searchQuery) {
+      query.$or = [{ name: { $regex: new RegExp(searchQuery, "i") } }];
+    }
+
+    const tags = await Tag.find(query);
     if (!tags) {
       throw new Error("No tags found.");
     }

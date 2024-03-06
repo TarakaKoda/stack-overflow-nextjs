@@ -34,6 +34,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
+       suppressHydrationWarning={true}
         className={`${inter.variable} ${spaceGrotesk.variable} custom-scrollbar`}
       >
         <ClerkProvider

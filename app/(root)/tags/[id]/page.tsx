@@ -2,27 +2,20 @@ import QuestionCard from "@/components/cards/QuestionCard";
 import NoResult from "@/components/shared/NoResult";
 import LocalSearchBar from "@/components/shared/search/LocalSearchBar";
 import { getQuestionByTagId } from "@/lib/actions/tag.action";
+import { URLProps } from "@/types";
 
-interface Props {
-  params: { id: string };
-  searchParams: { queryParams: string };
-}
-
-const TagDetailPage = async ({
-  params: { id },
-  searchParams: { queryParams },
-}: Props) => {
+const TagDetailPage = async ({ params: { id }, searchParams }: URLProps) => {
   const { tagTitle, questions } = await getQuestionByTagId({
     tagId: id,
-    searchQuery: queryParams,
+    searchQuery: searchParams.q,
   });
   return (
     <>
       <h1 className="h1-bold text-dark100_light900">{tagTitle}</h1>
 
       <div className="mt-11 w-full">
-        <LocalSearchBar
-          route="/"
+        <LocalSearchBar 
+          route={`/tags/${id}`}
           iconPosition="left"
           imgSrc="/assets/icons/search.svg"
           placeholder="Search for questions"
