@@ -4,15 +4,19 @@ import NoResult from "@/components/shared/NoResult";
 import LocalSearchBar from "@/components/shared/search/LocalSearchBar";
 import { QuestionFilters } from "@/constants/filters";
 import { getSavedQuestions } from "@/lib/actions/user.action";
+import { SearchParamsProps } from "@/types";
 import { auth } from "@clerk/nextjs";
 
-export default async function CollectionPage() {
+export default async function CollectionPage({
+  searchParams,
+}: SearchParamsProps) {
   const { userId: clerkId } = auth();
 
   if (!clerkId) return null;
 
   const result = await getSavedQuestions({
     clerkId,
+    searchQuery: searchParams.q,
   });
   return (
     <>
