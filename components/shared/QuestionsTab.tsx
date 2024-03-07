@@ -14,7 +14,7 @@ const QuestionsTab = async ({
   searchParams,
 }: QuestionsTabProps) => {
   const { questions, totalQuestions } = await getUserQuestions({
-    userId: userId,
+    userId,
   });
   return (
     <div className="mt-10 flex w-full flex-col gap-6 ">
