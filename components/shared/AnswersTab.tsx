@@ -14,7 +14,7 @@ const AnswersTab = async ({
   searchParams,
 }: AnswersTabProps) => {
   const { answers, totalAnswers } = await getUserAnswers({
-    userId: userId,
+    userId,
   });
   return (
     <>
