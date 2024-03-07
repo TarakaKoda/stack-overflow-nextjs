@@ -27,21 +27,12 @@ const Filter = ({ filters, otherClasses, containerClasses }: Props) => {
   const paramFilter = searchParams.get("filter");
 
   const handleFilters = (filter: string) => {
-    if (paramFilter === filter) {
-      const newUrl = formUrlQuery({
-        params: searchParams.toString(),
-        key: "filter",
-        value: null,
-      });
-      router.push(newUrl, { scroll: false });
-    } else {
-      const newUrl = formUrlQuery({
-        params: searchParams.toString(),
-        key: "filter",
-        value: filter,
-      });
-      router.push(newUrl, { scroll: false });
-    }
+    const newUrl = formUrlQuery({
+      params: searchParams.toString(),
+      key: "filter",
+      value: filter,
+    });
+    router.push(newUrl, { scroll: false });
   };
 
   return (
