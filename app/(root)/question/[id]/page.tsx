@@ -8,17 +8,15 @@ import { ITag } from "@/database/tag.model";
 import { getQuestionById } from "@/lib/actions/question.action";
 import { getUserById } from "@/lib/actions/user.action";
 import { getFormattedNumber, getTimestamp } from "@/lib/utils";
+import { URLProps } from "@/types";
 import { auth } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-interface Props {
-  params: { id: string };
-}
 
-const QuestionDetailPage = async ({ params: { id } }: Props) => {
-  const { question } = await getQuestionById({ questionId: id });
+const QuestionDetailPage = async ({ params: { id }, searchParams }: URLProps) => {
+  const { question } = await getQuestionById({ questionId: id});
   const { userId: clerkId } = auth();
 
   let mongoUser;
@@ -103,6 +101,7 @@ const QuestionDetailPage = async ({ params: { id } }: Props) => {
         questionId={JSON.stringify(question._id)}
         userId={mongoUser._id}
         totalAnswers={question.answers.length}
+        filter={searchParams?.filter}
       />
       <Answer
         question={question.content}
