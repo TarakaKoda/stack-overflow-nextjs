@@ -92,7 +92,7 @@ export async function getAllTags(params: GetAllTagsParams) {
 export async function getQuestionByTagId(params: GetQuestionByTagIdParams) {
   try {
     connectToDatabase();
-    const { tagId, searchQuery, page = 1, pageSize = 3 } = params;
+    const { tagId, searchQuery, page = 1, pageSize = 10 } = params;
 
     const skipAmount = (page - 1) * pageSize;
 
