@@ -256,12 +256,16 @@ export async function getUserQuestions(params: GetUserStatsParams) {
   try {
     connectToDatabase();
 
-    const { userId } = params;
+    const { userId, page = 1, pageSize = 2 } = params;
+
+    const skipAmount = (page - 1) * pageSize;
 
     const totalQuestions = await Question.countDocuments({ author: userId });
 
-    const UserQuestions = await Question.find({ author: userId })
+    const userQuestions = await Question.find({ author: userId })
       .sort({ views: -1, upvotes: -1 })
+      .skip(skipAmount)
+      .limit(pageSize)
       .populate({
         path: "tags",
         model: Tag,
@@ -273,7 +277,9 @@ export async function getUserQuestions(params: GetUserStatsParams) {
         select: "_id clerkId name picture",
       });
 
-    return { questions: UserQuestions, totalQuestions };
+    const isNextQuestion = totalQuestions > skipAmount + userQuestions.length;
+
+    return { questions: userQuestions, totalQuestions, isNextQuestion };
   } catch (error) {
     console.log(error);
     throw error;
@@ -283,12 +289,16 @@ export async function getUserAnswers(params: GetUserStatsParams) {
   try {
     connectToDatabase();
 
-    const { userId } = params;
+    const { userId, page = 1, pageSize = 2 } = params;
+
+    const skipAmount = (page - 1) * pageSize;
 
     const totalAnswers = await Answer.countDocuments({ author: userId });
 
-    const UserAnswers = await Answer.find({ author: userId })
+    const userAnswers = await Answer.find({ author: userId })
       .sort({ upvotes: -1 })
+      .skip(skipAmount)
+      .limit(pageSize)
       .populate({ path: "question", model: Question, select: "_id title" })
       .populate({
         path: "author",
@@ -296,7 +306,9 @@ export async function getUserAnswers(params: GetUserStatsParams) {
         select: "_id clerkId name picture",
       });
 
-    return { answers: UserAnswers, totalAnswers };
+    const isNextAnswer = totalAnswers > skipAmount + userAnswers.length;
+
+    return { answers: userAnswers, totalAnswers, isNextAnswer };
   } catch (error) {
     console.log(error);
     throw error;

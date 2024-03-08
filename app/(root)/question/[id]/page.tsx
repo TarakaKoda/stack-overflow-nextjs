@@ -14,9 +14,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-
-const QuestionDetailPage = async ({ params: { id }, searchParams }: URLProps) => {
-  const { question } = await getQuestionById({ questionId: id});
+const QuestionDetailPage = async ({
+  params: { id },
+  searchParams,
+}: URLProps) => {
+  const { question } = await getQuestionById({ questionId: id });
   const { userId: clerkId } = auth();
 
   let mongoUser;
@@ -108,7 +110,6 @@ const QuestionDetailPage = async ({ params: { id }, searchParams }: URLProps) =>
         questionId={JSON.stringify(question._id)}
         authorId={JSON.stringify(mongoUser)}
       />
-
     </>
   );
 };
