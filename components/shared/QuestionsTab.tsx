@@ -2,6 +2,7 @@ import { getUserQuestions } from "@/lib/actions/user.action";
 import { SearchParamsProps } from "@/types";
 import QuestionCard from "../cards/QuestionCard";
 import NoResult from "./NoResult";
+import Pagination from "./Pagination";
 
 interface QuestionsTabProps extends SearchParamsProps {
   userId: string;
@@ -13,8 +14,9 @@ const QuestionsTab = async ({
   clerkId,
   searchParams,
 }: QuestionsTabProps) => {
-  const { questions, totalQuestions } = await getUserQuestions({
-    userId: userId,
+  const { questions, totalQuestions, isNextQuestion } = await getUserQuestions({
+    userId,
+    page: searchParams?.page ? +searchParams.page : 1,
   });
   return (
     <div className="mt-10 flex w-full flex-col gap-6 ">
@@ -43,6 +45,10 @@ const QuestionsTab = async ({
           linkTitle="Ask a Question"
         />
       )}
+      <Pagination
+        pageNumber={searchParams?.page ? +searchParams.page : 1}
+        isNext={isNextQuestion}
+      />
     </div>
   );
 };

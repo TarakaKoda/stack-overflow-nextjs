@@ -2,6 +2,7 @@ import { getUserAnswers } from "@/lib/actions/user.action";
 import { SearchParamsProps } from "@/types";
 import AnswerCard from "../cards/AnswerCard";
 import NoResult from "./NoResult";
+import Pagination from "./Pagination";
 
 interface AnswersTabProps extends SearchParamsProps {
   userId: string;
@@ -13,8 +14,9 @@ const AnswersTab = async ({
   clerkId,
   searchParams,
 }: AnswersTabProps) => {
-  const { answers, totalAnswers } = await getUserAnswers({
-    userId: userId,
+  const { answers, totalAnswers, isNextAnswer } = await getUserAnswers({
+    userId,
+    page: searchParams?.page ? +searchParams.page : 1,
   });
   return (
     <>
@@ -41,6 +43,12 @@ const AnswersTab = async ({
             linkTitle="Ask a Question"
           />
         )}
+      </div>
+      <div className="mt-10">
+        <Pagination
+          pageNumber={searchParams?.page ? +searchParams.page : 1}
+          isNext={isNextAnswer}
+        />
       </div>
     </>
   );

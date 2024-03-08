@@ -4,6 +4,7 @@ import { getTimestamp } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import Filter from "./Filter";
+import Pagination from "./Pagination";
 import ParseHTML from "./ParseHTML";
 import Votes from "./Votes";
 
@@ -20,10 +21,12 @@ const AllAnswers = async ({
   userId,
   totalAnswers,
   filter,
+  page,
 }: Props) => {
   const result = await getAnswers({
     questionId: JSON.parse(questionId),
     sortBy: filter,
+    page,
   });
   return (
     <div className="mt-11">
@@ -73,6 +76,9 @@ const AllAnswers = async ({
             <ParseHTML data={answer.content} />
           </article>
         ))}
+      </div>
+      <div className="mt-10">
+        <Pagination pageNumber={page!} isNext={result.isNext} />
       </div>
     </div>
   );
