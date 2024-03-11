@@ -17,6 +17,7 @@ import {
   ToggleSaveQuestionParams,
   UpdateUserParams,
 } from "./shared.types";
+import path from "path";
 
 export async function getUserById(params: GetUserByIdParams) {
   try {
@@ -34,6 +35,9 @@ export async function createUser(userData: CreateUserParams) {
   try {
     connectToDatabase();
     const newUser = await User.create(userData);
+
+    await User.findByIdAndUpdate(newUser._id, { $inc: { reputation: 50 } });
+
     return newUser;
   } catch (error) {
     console.log(error);
@@ -145,16 +149,46 @@ export async function toggleSaveQuestion(params: ToggleSaveQuestionParams) {
 
     let updateQuery = {};
 
+    const question = await Question.findById(questionId).populate(
+      "author",
+      "_id",
+    );
+
+    const questionAuthorId = question.author._id.toString();
+
     if (user.saved.includes(questionId)) {
+      if (questionAuthorId !== user._id.toString()) {
+        await User.findByIdAndUpdate(questionAuthorId, {
+          $inc: { reputation: -5 },
+        });
+
+        updateQuery = {
+          $inc: { reputation: -5 },
+        };
+      }
+
       updateQuery = {
+        ...updateQuery,
         $pull: { saved: questionId },
       };
     } else {
+      if (questionAuthorId !== user._id.toString()) {
+        await User.findByIdAndUpdate(questionAuthorId, {
+          $inc: { reputation: 5 },
+        });
+
+        updateQuery = {
+          $inc: { reputation: 5 },
+        };
+      }
       updateQuery = {
+        ...updateQuery,
         $addToSet: { saved: questionId },
       };
-    }
 
+      if (questionAuthorId !== user._id.toString()) {
+      }
+    }
     await User.findByIdAndUpdate(userId, updateQuery, { new: true });
 
     revalidatePath(path);
@@ -296,7 +330,7 @@ export async function getUserAnswers(params: GetUserStatsParams) {
     const totalAnswers = await Answer.countDocuments({ author: userId });
 
     const userAnswers = await Answer.find({ author: userId })
-      .sort({ upvotes: -1 })
+      .sort({ createdAt: -1, upvotes: -1 })
       .skip(skipAmount)
       .limit(pageSize)
       .populate({ path: "question", model: Question, select: "_id title" })

@@ -23,7 +23,7 @@ export async function createAnswer(params: CreateAnswerParams) {
     // * Add new answer to the question answers array
     const questionObject = await Question.findByIdAndUpdate(question, {
       $push: { answers: newAnswer._id },
-    });
+    }).populate("author", "_id");
 
     // Todo: add interaction...
     await Interaction.create({
@@ -34,7 +34,12 @@ export async function createAnswer(params: CreateAnswerParams) {
       tags: questionObject.tags,
     });
 
-    await User.findByIdAndUpdate(author, { $inc: { reputation: 10 } });
+    const answerAuthor = newAnswer.author.toString();
+    const questionAuthor = questionObject.author._id.toString();
+
+    if (answerAuthor !== questionAuthor) {
+      await User.findByIdAndUpdate(author, { $inc: { reputation: 10 } });
+    }
 
     revalidatePath(path);
   } catch (error) {

@@ -58,7 +58,7 @@ export async function createQuestion(params: CreateQuestionParams) {
 
     // TODO Increment the author reputation with +5 for creating a question and answers an question.
 
-    await User.findByIdAndUpdate(author, { $inc: { reputation: 5 } });
+    await User.findByIdAndUpdate(author, { $inc: { reputation: 10 } });
 
     revalidatePath(path);
   } catch (error) {
@@ -269,6 +269,11 @@ export async function deleteQuestion(params: DeleteQuestionParams) {
 
     const { questionId, path } = params;
 
+    const deletedQuestion = await Question.findById(questionId).populate(
+      "author",
+      "_id reputation",
+    );
+
     await Question.deleteOne({ _id: questionId });
     await Answer.deleteMany({ question: questionId });
     await Interaction.deleteMany({ question: questionId });
@@ -278,6 +283,9 @@ export async function deleteQuestion(params: DeleteQuestionParams) {
       { $pull: { questions: questionId } },
     );
 
+    await User.findByIdAndUpdate(deletedQuestion.author._id, {
+      $inc: { reputation: -10 },
+    });
     revalidatePath(path);
   } catch (error) {
     console.log(error);
