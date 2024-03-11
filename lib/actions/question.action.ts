@@ -49,7 +49,17 @@ export async function createQuestion(params: CreateQuestionParams) {
 
     // TODO Create an interaction record for the user's ask question action
 
+    await Interaction.create({
+      user: author,
+      question: question._id,
+      tags: tagDocuments,
+      action: "ask_question",
+    });
+
     // TODO Increment the author reputation with +5 for creating a question and answers an question.
+
+    await User.findByIdAndUpdate(author, { $inc: { reputation: 10 } });
+
     revalidatePath(path);
   } catch (error) {
     console.log(error);
@@ -163,7 +173,22 @@ export async function upvoteQuestion(params: QuestionVoteParams) {
       throw new Error("Question not found");
     }
 
-    // Todo: Need to update the users reputation...
+    // Todo: Adjust the author's reputation based on the received upvote/downvote to the question.
+    // ? Increment value: +2 for an upvote, -2 for a downvote on the voter's reputation.
+    // ? Increment value: +10 for an upvote, -10 for a downvote on the question author's reputation.
+    // !Note: If the user is attempting to upvote their own question, their reputation remains unaffected. This ensures fair reputation management.
+
+    const questionAuthorId = question.author.toString();
+
+    if (userId !== questionAuthorId) {
+      await User.findByIdAndUpdate(userId, {
+        $inc: { reputation: hasupVoted ? -1 : 1 },
+      });
+
+      await User.findByIdAndUpdate(question.author, {
+        $inc: { reputation: hasupVoted ? -10 : 10 },
+      });
+    }
 
     revalidatePath(path);
   } catch (error) {
@@ -196,15 +221,42 @@ export async function downvoteQuestion(params: QuestionVoteParams) {
 
     const question = await Question.findByIdAndUpdate(questionId, updateQuery, {
       new: true,
-    });
+    }).populate("author", "reputation");
 
     if (!question) {
       throw new Error("Question not found");
     }
 
-    revalidatePath(path);
+    // Todo: Adjust the author's reputation based on the received upvote/downvote to the question.
+    // ? Increment value: +2 for an upvote, -2 for a downvote on the voter's reputation.
+    // ? Increment value: +10 for an upvote, -10 for a downvote on the question author's reputation.
+    // !Note: If the user is attempting to downvote their own question, their reputation remains unaffected. This ensures fair reputation management.
 
-    // Todo: Increment the user reputation...
+    const questionAuthorId = question.author.toString();
+
+    const reputationIncrement = hasdownVoted ? 10 : -10;
+
+    if (userId !== questionAuthorId) {
+      // * Update the voter's reputation
+      await User.findByIdAndUpdate(userId, {
+        $inc: { reputation: hasdownVoted ? -2 : 2 },
+      });
+
+      // * Update the author's reputation, ensuring it doesn't go below zero
+      const updatedReputation = Math.max(
+        0,
+        question.author.reputation + reputationIncrement,
+      );
+      await User.findByIdAndUpdate(question.author, {
+        $set: { reputation: updatedReputation },
+      });
+    } else {
+      // * If the user is the author of the answer, update only their reputation
+      await User.findByIdAndUpdate(userId, {
+        $inc: { reputation: hasdownVoted ? -2 : 2 },
+      });
+    }
+    revalidatePath(path);
   } catch (error) {
     console.log(error);
     throw error;
@@ -217,6 +269,11 @@ export async function deleteQuestion(params: DeleteQuestionParams) {
 
     const { questionId, path } = params;
 
+    const deletedQuestion = await Question.findById(questionId).populate(
+      "author",
+      "_id reputation",
+    );
+
     await Question.deleteOne({ _id: questionId });
     await Answer.deleteMany({ question: questionId });
     await Interaction.deleteMany({ question: questionId });
@@ -226,6 +283,9 @@ export async function deleteQuestion(params: DeleteQuestionParams) {
       { $pull: { questions: questionId } },
     );
 
+    await User.findByIdAndUpdate(deletedQuestion.author._id, {
+      $inc: { reputation: -10 },
+    });
     revalidatePath(path);
   } catch (error) {
     console.log(error);
