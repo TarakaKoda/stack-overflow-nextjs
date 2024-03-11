@@ -49,7 +49,17 @@ export async function createQuestion(params: CreateQuestionParams) {
 
     // TODO Create an interaction record for the user's ask question action
 
+    await Interaction.create({
+      user: author,
+      question: question._id,
+      tags: tagDocuments,
+      action: "ask_question",
+    });
+
     // TODO Increment the author reputation with +5 for creating a question and answers an question.
+
+    await User.findByIdAndUpdate(author, { $inc: { reputation: 5 } });
+
     revalidatePath(path);
   } catch (error) {
     console.log(error);
@@ -164,6 +174,15 @@ export async function upvoteQuestion(params: QuestionVoteParams) {
     }
 
     // Todo: Need to update the users reputation...
+    await User.findByIdAndUpdate(userId, {
+      $inc: { reputation: hasupVoted ? -1 : 1 },
+    });
+
+    // Todo: Increment author's reputation by +10/-10 for receiving an upvote/downvote to the question
+
+    await User.findByIdAndUpdate(question.author, {
+      $inc: { reputation: hasupVoted ? -10 : 10 },
+    });
 
     revalidatePath(path);
   } catch (error) {
