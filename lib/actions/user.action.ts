@@ -17,7 +17,6 @@ import {
   ToggleSaveQuestionParams,
   UpdateUserParams,
 } from "./shared.types";
-import path from "path";
 
 export async function getUserById(params: GetUserByIdParams) {
   try {
