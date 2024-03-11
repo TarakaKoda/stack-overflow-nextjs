@@ -184,9 +184,6 @@ export async function toggleSaveQuestion(params: ToggleSaveQuestionParams) {
         ...updateQuery,
         $addToSet: { saved: questionId },
       };
-
-      if (questionAuthorId !== user._id.toString()) {
-      }
     }
     await User.findByIdAndUpdate(userId, updateQuery, { new: true });
 
