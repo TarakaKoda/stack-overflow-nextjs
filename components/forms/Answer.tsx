@@ -12,11 +12,11 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "../ui/button";
 import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormMessage,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
 } from "../ui/form";
 
 interface Props {
@@ -28,6 +28,7 @@ interface Props {
 const Answer = ({ authorId, question, questionId }: Props) => {
   const pathname = usePathname();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [isSubmittingAi, setIsSubmittingAi] = useState<boolean>(false);
   const { mode } = useTheme();
   const editorRef = useRef(null);
   const form = useForm<z.infer<typeof AnswerSchema>>({
@@ -49,7 +50,7 @@ const Answer = ({ authorId, question, questionId }: Props) => {
       });
 
       form.reset();
-      
+
       if (editorRef.current) {
         const editor = editorRef.current as any;
         editor.setContent("");
@@ -61,6 +62,38 @@ const Answer = ({ authorId, question, questionId }: Props) => {
     }
   };
 
+  const generateAIAnswer = async () => {
+    if (!authorId) return;
+
+    setIsSubmittingAi(true);
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/chatgpt`,
+        {
+          method: "POST",
+          body: JSON.stringify({ question }),
+        },
+      );
+
+      const aiAnswer = await response.json();
+
+      // Todo: Convert plain text to HTML format.
+
+      const formatAnswer = aiAnswer.replay.replace(/\n/g, "<br/>");
+
+      if (editorRef.current) {
+        const editor = editorRef.current as any;
+        editor.setContent(formatAnswer);
+      }
+
+      // Todo: Add Toast...
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsSubmittingAi(false);
+    }
+  };
+
   return (
     <div className="">
       <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-center sm:gap-2">
@@ -68,19 +101,25 @@ const Answer = ({ authorId, question, questionId }: Props) => {
           Write your answer here
         </h4>
         <Button
-          onClick={() => console.log("Clicked")}
+          onClick={generateAIAnswer}
           disabled={isSubmitting}
           className="btn light-border-2 gap-1.5 rounded-md px-4 py-2.5 text-primary-500 shadow-none dark:text-primary-500"
           type="submit"
         >
-          <Image
-            src="/assets/icons/stars.svg"
-            alt="start"
-            width={12}
-            height={12}
-            className="object-contain text-white"
-          />
-          Generate an AI answer
+          {isSubmittingAi ? (
+            <>Generating...</>
+          ) : (
+            <>
+              <Image
+                src="/assets/icons/stars.svg"
+                alt="start"
+                width={12}
+                height={12}
+                className="object-contain text-white"
+              />
+              Generate AI answer
+            </>
+          )}
         </Button>
       </div>
       <Form {...form}>
