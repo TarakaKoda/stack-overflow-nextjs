@@ -71,7 +71,7 @@ const QuestionDetailPage = async ({
           imgUrl="/assets/icons/clock.svg"
           alt="clock icon"
           value={` asked ${getTimestamp(question.createdAt)}`}
-          title=" Asked"
+          title=""
           textStyles="small-medium text-dark400_light800"
         />
         <Metric
@@ -89,7 +89,6 @@ const QuestionDetailPage = async ({
           textStyles="small-medium text-dark400_light800"
         />
       </div>
-
       <ParseHTML data={question.content} />
 
       <div className="mt-8 flex flex-row items-center justify-between">

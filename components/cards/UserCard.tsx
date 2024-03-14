@@ -13,7 +13,7 @@ const UserCard = async ({ user }: Props) => {
   const interactedTags = await getTopInteractedTags({ userId: user._id });
 
   return (
-    <div className="text-dark400_light800 shadow-light-100_darknone w-full max-xs:min-w-full xs:w-[258px]">
+    <div className="text-dark400_light800 shadow-light-100_darknone flex w-full flex-grow max-xs:min-w-full xs:w-[258px]">
       <article className="background-light900_dark200 light-border flex w-full flex-col items-center justify-center rounded-2xl border p-8">
         <Link
           href={`/profile/${user.clerkId}`}
