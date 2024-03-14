@@ -24,7 +24,7 @@ const EditQuestionPage = async ({ params: { id } }: Props) => {
           questionDetails={JSON.stringify(question)}
         />
       </div>
-    </> 
+    </>
   );
 };
 
