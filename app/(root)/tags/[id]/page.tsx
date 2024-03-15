@@ -2,9 +2,20 @@ import QuestionCard from "@/components/cards/QuestionCard";
 import NoResult from "@/components/shared/NoResult";
 import Pagination from "@/components/shared/Pagination";
 import LocalSearchBar from "@/components/shared/search/LocalSearchBar";
-import { getQuestionByTagId } from "@/lib/actions/tag.action";
+import { getQuestionByTagId, getTagById } from "@/lib/actions/tag.action";
 import { URLProps } from "@/types";
-import { Metadata, ResolvingMetadata } from "next";
+import { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: Omit<URLProps, "searchParams">): Promise<Metadata> {
+  const tag = await getTagById({ tagId: params.id });
+
+  return {
+    title: `Posts by tag '${tag.name}' — DevOverflow`,
+    description: tag.description || `Questions tagged with ${tag.name}`,
+  };
+}
 
 const TagDetailPage = async ({ params: { id }, searchParams }: URLProps) => {
   const { tagTitle, questions, isNext } = await getQuestionByTagId({
@@ -44,7 +55,7 @@ const TagDetailPage = async ({ params: { id }, searchParams }: URLProps) => {
           <NoResult
             title="These's no Tag questions to show"
             description="Be the first to break the silence! 🚀 Ask a Question and kickstart the
-      discussion. our query could be the next big thing others learn from. Get
+            discussion. our query could be the next big thing others learn from. Get
       involved! 💡"
             link="/ask-question"
             linkTitle="Ask a Question"
@@ -62,22 +73,3 @@ const TagDetailPage = async ({ params: { id }, searchParams }: URLProps) => {
 };
 
 export default TagDetailPage;
-
-export async function generateMetadata(
-  { params: { id } }: URLProps,
-  parent: ResolvingMetadata,
-): Promise<Metadata> {
-  // read route params
-
-  // fetch data
-  const { tagTitle } = await getQuestionByTagId({
-    tagId: id,
-  });
-  // construct description based on user data
-  const description = `Explore questions related to the ${tagTitle} tag on Dev Overflow. Find answers, insights, and discussions about ${tagTitle}.`;
-
-  return {
-    title: `${tagTitle} Questions | Dev Overflow`,
-    description
-  };
-}
