@@ -6,6 +6,13 @@ import { TagFilters } from "@/constants/filters";
 import { getAllTags } from "@/lib/actions/tag.action";
 import { SearchParamsProps } from "@/types";
 import Link from "next/link";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Tags | Dev Overflow",
+  description:
+    "Explore a diverse range of tags used by developers on Dev Overflow. From popular frameworks like React and Next.js to specialized topics like machine learning and cybersecurity, discover the tags that categorize and organize the wealth of knowledge within our community.",
+};
 
 const TagsPage = async ({ searchParams }: SearchParamsProps) => {
   const result = await getAllTags({
@@ -31,7 +38,7 @@ const TagsPage = async ({ searchParams }: SearchParamsProps) => {
           otherClasses="min-h-[56px] sm:min-w-[170px]"
         />
       </div>
-      <section className="mt-12 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+      <section className="mt-12 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
         {result.tags.length > 0 ? (
           result.tags.map((tag) => (
             <Link
@@ -39,7 +46,7 @@ const TagsPage = async ({ searchParams }: SearchParamsProps) => {
               key={tag._id}
               className="shadow-light100_darknone flex flex-grow"
             >
-              <article className="background-light900_dark200 light-border flex flex-grow w-full flex-col justify-center rounded-2xl border px-8 py-10 sm:w-[220px]">
+              <article className="background-light900_dark200 light-border flex w-full flex-grow flex-col justify-center rounded-2xl border px-8 py-10 sm:w-[220px]">
                 <div className="background-light800_dark400 w-fit rounded-sm px-5 py-1.5">
                   <p className="paragraph-semibold text-dark300_light900 capitalize">
                     {tag.name}

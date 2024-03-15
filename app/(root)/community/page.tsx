@@ -6,12 +6,19 @@ import { UserFilters } from "@/constants/filters";
 import { getAllUsers } from "@/lib/actions/user.action";
 import { SearchParamsProps } from "@/types";
 import Link from "next/link";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Community | Dev Overflow",
+  description:
+    "Dive into the vibrant community of over 1,000,000 developers on Dev Overflow. Connect, collaborate, and learn from fellow developers worldwide. Join us and be a part of the conversation!",
+};
 
 const CommunityPage = async ({ searchParams }: SearchParamsProps) => {
   const result = await getAllUsers({
     searchQuery: searchParams.q,
     filter: searchParams.filter,
-    page: searchParams?.page ? +searchParams.page : 1
+    page: searchParams?.page ? +searchParams.page : 1,
   });
 
   return (

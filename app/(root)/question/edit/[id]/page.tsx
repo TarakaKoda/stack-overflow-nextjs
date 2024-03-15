@@ -2,6 +2,7 @@ import Question from "@/components/forms/Question";
 import { getQuestionById } from "@/lib/actions/question.action";
 import { getUserById } from "@/lib/actions/user.action";
 import { auth } from "@clerk/nextjs";
+import { Metadata, ResolvingMetadata } from "next";
 
 interface Props {
   params: { id: string };
@@ -29,3 +30,22 @@ const EditQuestionPage = async ({ params: { id } }: Props) => {
 };
 
 export default EditQuestionPage;
+
+export async function generateMetadata(
+  { params: { id } }: Props,
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
+  // read route params
+
+  // fetch data
+  const { question } = await getQuestionById({
+    questionId: id,
+  });
+  // construct description based on user data
+  const description = `Edit the question "${question.title}" on Dev Overflow. Update the content, tags, and details of your question.`;
+
+  return {
+    title: `Edit: ${question.title} | Dev Overflow`,
+    description
+  };
+}

@@ -4,6 +4,7 @@ import Pagination from "@/components/shared/Pagination";
 import LocalSearchBar from "@/components/shared/search/LocalSearchBar";
 import { getQuestionByTagId } from "@/lib/actions/tag.action";
 import { URLProps } from "@/types";
+import { Metadata, ResolvingMetadata } from "next";
 
 const TagDetailPage = async ({ params: { id }, searchParams }: URLProps) => {
   const { tagTitle, questions, isNext } = await getQuestionByTagId({
@@ -61,3 +62,22 @@ const TagDetailPage = async ({ params: { id }, searchParams }: URLProps) => {
 };
 
 export default TagDetailPage;
+
+export async function generateMetadata(
+  { params: { id } }: URLProps,
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
+  // read route params
+
+  // fetch data
+  const { tagTitle } = await getQuestionByTagId({
+    tagId: id,
+  });
+  // construct description based on user data
+  const description = `Explore questions related to the ${tagTitle} tag on Dev Overflow. Find answers, insights, and discussions about ${tagTitle}.`;
+
+  return {
+    title: `${tagTitle} Questions | Dev Overflow`,
+    description
+  };
+}

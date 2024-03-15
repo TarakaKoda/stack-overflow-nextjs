@@ -10,6 +10,7 @@ import { getUserById } from "@/lib/actions/user.action";
 import { getFormattedNumber, getTimestamp } from "@/lib/utils";
 import { URLProps } from "@/types";
 import { auth } from "@clerk/nextjs";
+import { Metadata, ResolvingMetadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -115,3 +116,22 @@ const QuestionDetailPage = async ({
 };
 
 export default QuestionDetailPage;
+
+export async function generateMetadata(
+  { params: { id } }: URLProps,
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
+  // read route params
+
+  // fetch data
+  const { question } = await getQuestionById({
+    questionId: id,
+  });
+  // construct description based on user data
+  const description = `Find answers and discussions about the question "${question.title}" on Dev Overflow.`;
+
+  return {
+    title: `${question.title} | Dev Overflow`,
+    description
+  };
+}
