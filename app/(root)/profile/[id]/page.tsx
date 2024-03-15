@@ -4,12 +4,13 @@ import QuestionsTab from "@/components/shared/QuestionsTab";
 import Stats from "@/components/shared/Stats";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { getUserInfo } from "@/lib/actions/user.action";
+import { getUserById, getUserInfo } from "@/lib/actions/user.action";
 import { getActualDateAndMonth } from "@/lib/utils";
 import { URLProps } from "@/types";
 import { SignedIn, auth } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
+import type { Metadata, ResolvingMetadata } from "next";
 
 const ProfileDetailPage = async ({
   params: { id },
@@ -111,3 +112,20 @@ const ProfileDetailPage = async ({
 };
 
 export default ProfileDetailPage;
+
+export async function generateMetadata(
+  { params }: URLProps,
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
+  // read route params
+  const id = params.id;
+
+  // fetch data
+  const user = await getUserById({ userId: id });
+  const description = `Explore the profile of ${user.name}. ${user.bio ? user.bio : ""}`;
+
+  return {
+    title: `${user.name}'s Profile | Dev Overflow`,
+    description
+  };
+}

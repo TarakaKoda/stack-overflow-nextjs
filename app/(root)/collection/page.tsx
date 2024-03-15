@@ -7,6 +7,13 @@ import { QuestionFilters } from "@/constants/filters";
 import { getSavedQuestions } from "@/lib/actions/user.action";
 import { SearchParamsProps } from "@/types";
 import { auth } from "@clerk/nextjs";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Collections | Dev Overflow",
+  description:
+    "Explore a personalized collection of your saved questions on Dev Overflow. Join our community of over 1,000,000 developers and access your curated repository of valuable insights and solutions.",
+};
 
 export default async function CollectionPage({
   searchParams,

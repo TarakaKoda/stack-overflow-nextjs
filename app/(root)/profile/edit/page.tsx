@@ -1,12 +1,14 @@
 import Profile from "@/components/forms/Profile";
 import { getUserById } from "@/lib/actions/user.action";
 import { auth } from "@clerk/nextjs";
+import type { Metadata } from "next";
 
-interface Props {
-  params: { id: string };
-}
+export const metadata: Metadata = {
+  title: `Edit Your Profile | Dev Overflow`,
+  description: `Edit the profile and Update your information, add a bio, and customize your profile on Dev Overflow.`,
+};
 
-const EditProfile = async ({ params: { id } }: Props) => {
+const EditProfile = async () => {
   const { userId: clerkId } = auth();
   if (!clerkId) return null;
 

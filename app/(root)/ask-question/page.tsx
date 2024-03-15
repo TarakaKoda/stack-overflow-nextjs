@@ -2,6 +2,13 @@ import Question from "@/components/forms/Question";
 import { getUserById } from "@/lib/actions/user.action";
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Ask a Question | Dev Overflow",
+  description:
+    "Ready to get answers? Ask your coding questions and get help from the vibrant community of over 1,000,000 developers on Dev Overflow. Whether it's about a specific framework, a programming language, or a coding challenge, our community is here to assist you.",
+};
 
 const AskQuestionPage = async () => {
   const { userId } = auth();
@@ -9,7 +16,6 @@ const AskQuestionPage = async () => {
   if (!userId) redirect("/sign-in");
 
   const mongooseUser = await getUserById({ userId });
-
 
   return (
     <div>
