@@ -8,6 +8,7 @@ import { connectToDatabase } from "../mongoose";
 import {
   GetAllTagsParams,
   GetQuestionByTagIdParams,
+  GetTagByIdParams,
   GetTopInteractedTagsParams,
 } from "./shared.types";
 
@@ -83,6 +84,23 @@ export async function getAllTags(params: GetAllTagsParams) {
     const isNext = totalTags > skipAmount + tags.length;
 
     return { tags, isNext };
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function getTagById(params: GetTagByIdParams) {
+  try {
+    connectToDatabase();
+
+    const { tagId } = params;
+
+    const tag = await Tag.findOne({
+      _id: tagId,
+    });
+
+    return tag;
   } catch (error) {
     console.log(error);
     throw error;
