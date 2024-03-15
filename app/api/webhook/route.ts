@@ -61,7 +61,7 @@ export async function POST(req: Request) {
       first_name: firstName,
       last_name: lastName,
       email_addresses: emailAddresses,
-      username
+      username,
     } = evt.data;
     const mongoUser = await createUser({
       clerkId: id,
@@ -83,7 +83,7 @@ export async function POST(req: Request) {
       first_name: firstName,
       last_name: lastName,
       email_addresses: emailAddresses,
-      username
+      username,
     } = evt.data;
     const mongoUser = await updateUser({
       clerkId: id,
@@ -113,5 +113,5 @@ export async function POST(req: Request) {
     );
   }
 
-  return new Response("", { status: 200 });
+  return NextResponse.json({ message: "OK" });
 }
