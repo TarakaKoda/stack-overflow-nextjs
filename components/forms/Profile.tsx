@@ -19,6 +19,7 @@ import { ProfileSchema } from "@/lib/validations";
 import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { updateUser } from "@/lib/actions/user.action";
+import { toast } from "../ui/use-toast";
 
 interface Props {
   clerkId: string;
@@ -58,6 +59,11 @@ const Profile = ({ clerkId, user }: Props) => {
           portfolioWebsite: values.portfolio,
           location: values.location,
         },
+      });
+
+      toast({
+        title: "User Details Successfully Updated",
+        variant: "success",
       });
 
       // Todo: route the user back to the profile page...

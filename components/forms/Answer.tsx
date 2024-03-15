@@ -18,6 +18,7 @@ import {
   FormItem,
   FormMessage,
 } from "../ui/form";
+import { toast } from "../ui/use-toast";
 
 interface Props {
   authorId: string;
@@ -47,6 +48,11 @@ const Answer = ({ authorId, question, questionId }: Props) => {
         author: JSON.parse(authorId),
         question: JSON.parse(questionId),
         path: pathname,
+      });
+
+      toast({
+        title: "Answer successfully submitted",
+        variant: "success",
       });
 
       form.reset();

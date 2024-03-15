@@ -26,6 +26,7 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { Badge } from "../ui/badge";
 import { ITag } from "@/database/tag.model";
+import { toast } from "../ui/use-toast";
 
 interface Props {
   mongoUserId: string;
@@ -70,6 +71,11 @@ const Question = ({ mongoUserId, type, questionDetails }: Props) => {
           questionId: parsedQuestionDetails._id,
         });
 
+        toast({
+          title: "Question Details Successfully Updated",
+          variant: "success",
+        });
+
         //* navigate to question detail page
         router.push(`/question/${parsedQuestionDetails._id}`);
       } else {
@@ -84,10 +90,16 @@ const Question = ({ mongoUserId, type, questionDetails }: Props) => {
 
         // Todo: contain all form data
 
+        toast({
+          title: `Question has been created`,
+          variant: "success",
+        });
+
         //* navigate to home page
         router.push("/");
       }
     } catch (error) {
+      console.log(error);
     } finally {
       setIsSubmitting(false);
     }
