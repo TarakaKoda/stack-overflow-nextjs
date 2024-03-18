@@ -18,6 +18,7 @@ interface Props {
   }[];
   otherClasses?: string;
   containerClasses?: string;
+  jobFilter?: boolean
 }
 
 const Filter = ({ filters, otherClasses, containerClasses }: Props) => {
