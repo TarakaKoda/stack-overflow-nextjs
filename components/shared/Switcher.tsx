@@ -18,10 +18,10 @@ const Switcher = ({ query, label }: Props) => {
 
   const paramFilter = searchParams.get(query);
 
-  const handleUpdateParams = (value: string) => {
+  const handleUpdateParams = (checked: boolean) => {
     let newUrl;
-
-    if (!value) {
+  
+    if (!checked) {
       newUrl = removeKeysUrlQuery({
         params: searchParams.toString(),
         keysToRemove: [query],
@@ -30,10 +30,10 @@ const Switcher = ({ query, label }: Props) => {
       newUrl = formUrlQuery({
         params: searchParams.toString(),
         key: query,
-        value,
+        value: "true",
       });
     }
-
+  
     router.push(newUrl, { scroll: false });
   };
 
@@ -43,7 +43,7 @@ const Switcher = ({ query, label }: Props) => {
         id={`${query}-switcher`}
         className="ml-4 mr-2"
         checked={paramFilter === "true"}
-
+        // @ts-expect
         onCheckedChange={handleUpdateParams}
       />
       <Label htmlFor={`${query}-switcher`} className="text-light-500">
