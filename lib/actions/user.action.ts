@@ -18,7 +18,7 @@ import {
   UpdateUserParams,
 } from "./shared.types";
 import { BadgeCriteriaType } from "@/types";
-import { assignBadge } from "../utils";
+import { assignBadges } from "../utils";
 
 export async function getUserById(params: GetUserByIdParams) {
   try {
@@ -333,7 +333,7 @@ export async function getUserInfo(params: GetUserByIdParams) {
       },
     ];
 
-    const badgeCounts = assignBadge({ criteria });
+    const badgeCounts = assignBadges({ criteria });
 
     const reputation = user.reputation;
 
